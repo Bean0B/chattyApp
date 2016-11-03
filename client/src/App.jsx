@@ -10,25 +10,35 @@ class App extends Component {
     super(props);
     this.pushNewMessage = this.pushNewMessage.bind(this);
     this.state = {
-      currentUser: {name: "Bob"}, // optional. if currentUser is not defined, it means the user is Anonymous
-      messages: [
-        {
-        username: "Bob",
-        content: "Has anyone seen my marbles?",
-        },
-        {
-        username: "Anonymous",
-        content: "No, I think you lost them. You lost your marbles Bob. You lost them for good.",
+      currentUser: {name: ""}, // optional. if currentUser is not defined, it means the user is Anonymous
+      messages: []
+    };
+  }
+
+  componentDidMount(){
+    this.socket = new WebSocket("ws://localhost:4000");
+    this.socket.onopen = (event) => {
+      console.log("Connected to Server.")
+      this.socket.onmessage = (event) => {
+        const newMessage = JSON.parse(event.data)
+        const post = this.state.messages.concat(newMessage)
+        this.setState({messages: post})
         }
-      ]
-    }
+    };
   }
+
+  sendMessageToServer(messageObject){
+    this.socket.send(JSON.stringify(messageObject))
+  }
+
   pushNewMessage(name, content){
-    console.log(name, content)
-    const newMessage = {username: name, content: content};
-    const messages = this.state.messages.concat(newMessage)
-    this.setState({messages: messages})
+     const newMessage = {
+      username: name,
+      content: content,
+    };
+  this.sendMessageToServer(newMessage)
   }
+
   render() {
     return (
       <div className="wrapper">

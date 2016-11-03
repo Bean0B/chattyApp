@@ -11,7 +11,7 @@ class ChatBar extends Component {
     if (event.key == 'Enter'){
       let text = this.refs['message-input-box'].value
       let user = this.refs['username-input-box'].value
-
+      this.refs['message-input-box'].value = "";
       if(user.length === 0){
         user = "Anon"
       }
