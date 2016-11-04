@@ -15,12 +15,10 @@ class ChatBar extends Component {
       if(user.length === 0){
         user = "Anon"
       }
-
       if(text.length > 0){
         this.props.newMessage(user, text)
       }
     }
-
   }
 
   render() {

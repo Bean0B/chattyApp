@@ -10,7 +10,7 @@ class App extends Component {
     this.pushNewMessage = this.pushNewMessage.bind(this);
 
     this.state = {
-      currentUser: {name: ""}, // optional. if currentUser is not defined, it means the user is Anonymous
+      currentUser: {name: "Anon"}, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: [],
       userCount:0
     };
@@ -70,8 +70,8 @@ class App extends Component {
     return (
       <div className="wrapper">
         <nav>
-          <h1>Loquacious</h1>
-          <h6>Users Online{this.state.userCount}</h6>
+          <h2>loquacious</h2>
+          <h4>users on {this.state.userCount}</h4>
         </nav>
         <div id="message-list">
           <MessageList data={this.state.messages} />
