@@ -3,15 +3,16 @@ import Message from './Message.jsx';
 import MessageList from './MessageList.jsx';
 import ChatBar from './ChatBar.jsx';
 
-
 class App extends Component {
 
   constructor(props) {
     super(props);
     this.pushNewMessage = this.pushNewMessage.bind(this);
+
     this.state = {
       currentUser: {name: ""}, // optional. if currentUser is not defined, it means the user is Anonymous
-      messages: []
+      messages: [],
+      userCount:0
     };
   }
 
@@ -20,21 +21,47 @@ class App extends Component {
     this.socket.onopen = (event) => {
       console.log("Connected to Server.")
       this.socket.onmessage = (event) => {
-        const newMessage = JSON.parse(event.data)
-        const post = this.state.messages.concat(newMessage)
-        this.setState({messages: post})
+        console.log(event);
+        let newMessage = JSON.parse(event.data);
+          switch(newMessage.type) {
+            case "postMessage":
+            case "postNotification":
+              let post = this.state.messages.concat(newMessage)
+              this.setState({messages: post})
+              break;
+            case "userCount":
+              this.setState({userCount: newMessage.usersOnline})
+              break;
+          }
+
         }
     };
   }
 
   sendMessageToServer(messageObject){
+    console.log(messageObject)
     this.socket.send(JSON.stringify(messageObject))
   }
 
   pushNewMessage(name, content){
+    if (this.state.currentUser.name !== name) {
+      this.postNewNotification(name)
+      this.state.currentUser.name = name
+      this.setState({currentUser: this.state.currentUser})
+    }
      const newMessage = {
+      type: "postMessage",
       username: name,
       content: content,
+    };
+  this.sendMessageToServer(newMessage)
+  }
+
+  postNewNotification(newUsername){
+     const newMessage = {
+      type: "postNotification",
+      oldUsername: this.state.currentUser.name,
+      newUsername: newUsername,
     };
   this.sendMessageToServer(newMessage)
   }
@@ -44,10 +71,10 @@ class App extends Component {
       <div className="wrapper">
         <nav>
           <h1>Loquacious</h1>
+          <h6>Users Online{this.state.userCount}</h6>
         </nav>
         <div id="message-list">
-          <MessageList messages={this.state.messages} />
-          <Message />
+          <MessageList data={this.state.messages} />
         </div>
         <ChatBar currentUser={this.state.currentUser} newMessage={this.pushNewMessage} />
       </div>
