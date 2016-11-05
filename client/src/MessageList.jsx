@@ -9,9 +9,7 @@ class MessageList extends Component {
         {this.props.data.map((messageStuff, index) => {
           console.log(messageStuff)
           return <Message
-          //content ={messageStuff.content}
-          //username ={messageStuff.username}
-          key ={index}
+          key={index}
           body={messageStuff}/>
         })
       }
