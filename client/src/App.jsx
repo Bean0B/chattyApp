@@ -14,7 +14,7 @@ class App extends Component {
       messages: [],
       userCount:0
     };
-  }
+  };
 
   componentDidMount(){
     this.socket = new WebSocket("ws://localhost:4000");
@@ -33,29 +33,28 @@ class App extends Component {
               this.setState({userCount: newMessage.usersOnline})
               break;
           }
-
         }
     };
-  }
+  };
 
   sendMessageToServer(messageObject){
     console.log(messageObject)
     this.socket.send(JSON.stringify(messageObject))
-  }
+  };
 
   pushNewMessage(name, content){
     if (this.state.currentUser.name !== name) {
       this.postNewNotification(name)
       this.state.currentUser.name = name
       this.setState({currentUser: this.state.currentUser})
-    }
+    };
      const newMessage = {
       type: "postMessage",
       username: name,
       content: content,
     };
   this.sendMessageToServer(newMessage)
-  }
+  };
 
   postNewNotification(newUsername){
      const newMessage = {
@@ -64,7 +63,7 @@ class App extends Component {
       newUsername: newUsername,
     };
   this.sendMessageToServer(newMessage)
-  }
+  };
 
   render() {
     return (
@@ -79,6 +78,6 @@ class App extends Component {
         <ChatBar currentUser={this.state.currentUser} newMessage={this.pushNewMessage} />
       </div>
     );
-  }
-}
+  };
+};
 export default App;

@@ -4,8 +4,8 @@
   "description": "server for chatty app",
   "main": "index.js",
   "scripts": {
-    "test": "test",
-    "start": "go"
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "aileen",
   "license": "ISC",
